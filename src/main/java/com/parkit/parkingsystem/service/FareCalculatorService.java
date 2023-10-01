@@ -7,7 +7,7 @@ public class FareCalculatorService {
 
     private static final double hourInMillis = 3600000.0;
 
-    public void calculateFare(Ticket ticket){
+    public void calculateFare(Ticket ticket, boolean discount){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect: " + ticket.getOutTime().toString());
         }
@@ -20,17 +20,23 @@ public class FareCalculatorService {
         if (durationInHour < 0.5) {
             ticket.setPrice(0.0); // Free parking under 30min
         } else {
-            switch (ticket.getParkingSpot().getParkingType()){
-                case CAR: {
+            switch (ticket.getParkingSpot().getParkingType()) {
+                case CAR -> {
                     ticket.setPrice(durationInHour * Fare.CAR_RATE_PER_HOUR);
-                    break;
                 }
-                case BIKE: {
+                case BIKE -> {
                     ticket.setPrice(durationInHour * Fare.BIKE_RATE_PER_HOUR);
-                    break;
                 }
-                default: throw new IllegalArgumentException("Unknown Parking Type");
+                default -> throw new IllegalArgumentException("Unknown Parking Type");
             }
         }
+
+        if (discount) {
+            ticket.setPrice(ticket.getPrice() * 0.95); // Apply a 5% discount
+        }
+    }
+
+    public void calculateFare(Ticket ticket) {
+        calculateFare(ticket, false);
     }
 }

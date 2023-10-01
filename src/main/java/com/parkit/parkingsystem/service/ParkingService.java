@@ -32,8 +32,13 @@ public class ParkingService {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
+
+                if (isRecurrentUser(vehicleRegNumber)) { // Check if loyal customer
+                    System.out.println("Happy to see you again ! As a regular user of our parking lot, you will get a 5% discount");
+                }
+
                 parkingSpot.setAvailable(false);
-                parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
+                parkingSpotDAO.updateParking(parkingSpot); // allot this parking space and mark its availability as false
 
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
@@ -54,17 +59,20 @@ public class ParkingService {
         }
     }
 
+    private boolean isRecurrentUser(String vehicleRegNumber) {
+        return ticketDAO.isRecurrentUser(vehicleRegNumber);
+    }
+
     private String getVehichleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
     }
 
     public ParkingSpot getNextParkingNumberIfAvailable(){
-        int parkingNumber=0;
         ParkingSpot parkingSpot = null;
         try{
             ParkingType parkingType = getVehichleType();
-            parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
+            int parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
             }else{
@@ -83,14 +91,14 @@ public class ParkingService {
         System.out.println("1 CAR");
         System.out.println("2 BIKE");
         int input = inputReaderUtil.readSelection();
-        switch(input){
-            case 1: {
+        switch (input) {
+            case 1 -> {
                 return ParkingType.CAR;
             }
-            case 2: {
+            case 2 -> {
                 return ParkingType.BIKE;
             }
-            default: {
+            default -> {
                 System.out.println("Incorrect input provided");
                 throw new IllegalArgumentException("Entered input is invalid");
             }
@@ -103,7 +111,14 @@ public class ParkingService {
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             Date outTime = new Date();
             ticket.setOutTime(outTime);
-            fareCalculatorService.calculateFare(ticket);
+
+            int ticketNb = ticketDAO.getNbTicket(vehicleRegNumber);
+            if (ticketNb > 1) {
+                fareCalculatorService.calculateFare(ticket, true);
+            } else {
+                fareCalculatorService.calculateFare(ticket);
+            }
+
             if(ticketDAO.updateTicket(ticket)) {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
