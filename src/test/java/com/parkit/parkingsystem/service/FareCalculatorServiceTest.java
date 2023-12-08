@@ -1,10 +1,9 @@
-package com.parkit.parkingsystem;
+package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.service.FareCalculatorService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,12 +18,12 @@ public class FareCalculatorServiceTest {
     private Ticket ticket;
 
     @BeforeAll
-    private static void setUp() {
+    public static void setUp() {
         fareCalculatorService = new FareCalculatorService();
     }
 
     @BeforeEach
-    private void setUpPerTest() {
+    public void setUpPerTest() {
         ticket = new Ticket();
     }
 

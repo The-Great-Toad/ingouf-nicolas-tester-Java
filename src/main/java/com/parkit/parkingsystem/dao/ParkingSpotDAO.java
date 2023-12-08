@@ -25,7 +25,7 @@ public class ParkingSpotDAO {
             ps.setString(1, parkingType.toString());
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                result = rs.getInt(1);;
+                result = rs.getInt(1);
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
@@ -54,6 +54,36 @@ public class ParkingSpotDAO {
         }finally {
             dataBaseConfig.closeConnection(con);
         }
+    }
+
+    public int getTotalParkingSpotNumber() {
+        int result= 0;
+        try (Connection con = dataBaseConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(DBConstants.GET_TOTAL_PARKING_SPOT);
+             ResultSet rs = ps.executeQuery())
+        {
+            if(rs.next()){
+                result = rs.getInt(1);
+            }
+        } catch (Exception ex){
+            logger.error("Error fetching parking slot: {} ", ex.getMessage());
+        }
+        return result;
+    }
+
+    public int getTotalAvailableParkingSpotNumber() {
+        int result= 0;
+        try (Connection con = dataBaseConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(DBConstants.GET_TOTAL_AVAILABLE_PARKING_SPOT);
+             ResultSet rs = ps.executeQuery())
+        {
+            if(rs.next()){
+                result = rs.getInt(1);
+            }
+        } catch (Exception ex){
+            logger.error("Error fetching available parking slot: {} ", ex.getMessage());
+        }
+        return result;
     }
 
 }

@@ -1,11 +1,10 @@
-package com.parkit.parkingsystem;
+package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +53,7 @@ public class ParkingServiceTest {
 
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
         when(ticketDAO.getNbTicket(anyString())).thenReturn(1);
-        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+        when(ticketDAO.updateTicketAfterParkingLotExit(any(Ticket.class))).thenReturn(true);
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 
         parkingService.processExitingVehicle();
@@ -84,7 +83,7 @@ public class ParkingServiceTest {
 
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
         when(ticketDAO.getNbTicket(anyString())).thenReturn(1);
-        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
+        when(ticketDAO.updateTicketAfterParkingLotExit(any(Ticket.class))).thenReturn(false);
 
         parkingService.processExitingVehicle();
 

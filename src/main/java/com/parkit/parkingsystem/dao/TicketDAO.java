@@ -66,11 +66,39 @@ public class TicketDAO {
         return ticket;
     }
 
+    public int getTotalTicket() {
+        int result= 0;
+        try (Connection con = dataBaseConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(DBConstants.GET_TOTAL_TICKET);
+             ResultSet rs = ps.executeQuery())
+        {
+            if(rs.next()){
+                result = rs.getInt(1);
+            }
+        } catch (Exception ex){
+            logger.error("Error fetching ticket: {} ", ex.getMessage());
+        }
+        return result;
+    }
+
     public boolean updateTicket(Ticket ticket) {
+        try (Connection con = dataBaseConfig.getConnection()){
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
+            ps.setTimestamp(1, new Timestamp(ticket.getInTime().getTime()));
+            ps.setInt(2,ticket.getId());
+            ps.execute();
+            return true;
+        }catch (Exception ex){
+            logger.error("Error saving ticket info",ex);
+        }
+        return false;
+    }
+
+    public boolean updateTicketAfterParkingLotExit(Ticket ticket) {
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET_AFTER_EXIT);
             ps.setDouble(1, ticket.getPrice());
             ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
             ps.setInt(3,ticket.getId());
