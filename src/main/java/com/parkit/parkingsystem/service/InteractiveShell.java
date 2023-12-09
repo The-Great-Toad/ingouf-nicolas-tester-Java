@@ -9,10 +9,10 @@ import org.apache.logging.log4j.Logger;
 public class InteractiveShell {
 
     private static final Logger logger = LogManager.getLogger("InteractiveShell");
-    private static InputReaderUtil inputReaderUtil = new InputReaderUtil();
-    private static ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
-    private static TicketDAO ticketDAO = new TicketDAO();
-    private static ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+    private static final InputReaderUtil inputReaderUtil = new InputReaderUtil();
+    private static final ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
+    private static final TicketDAO ticketDAO = new TicketDAO();
+    private static final ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 
     public static void loadInterface(){
         logger.info("App initialized!!!");

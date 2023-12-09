@@ -112,12 +112,16 @@ public class TicketDAO {
         return false;
     }
 
+    /**
+     * Count the number of tickets saved in a database under a car registration number.
+     *
+     * @param vehicleRegNumber Car registration number to search for.
+     * @return the number of tickets or -1 if none found.
+     */
     public int getNbTicket(String vehicleRegNumber) {
-        Connection con = null;
         int count = -1;
 
-        try {
-            con = dataBaseConfig.getConnection();
+        try (Connection con = dataBaseConfig.getConnection()) {
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_NB_TICKET);
             ps.setString(1, vehicleRegNumber);
             ResultSet rs = ps.executeQuery();
@@ -129,8 +133,6 @@ public class TicketDAO {
             logger.info("Number of ticket for car with registration number %s is %d".formatted(vehicleRegNumber, count));
         } catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
-        } finally {
-            dataBaseConfig.closeConnection(con);
         }
         return count;
     }
