@@ -68,13 +68,15 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket, true);
 
         double undiscountedPrice = calculateTicketDurationToBeCharge(ticket) * Fare.CAR_RATE_PER_HOUR;
-        double discountReceived = (undiscountedPrice - ticket.getPrice()) / undiscountedPrice;
-        double roundedDiscountReceived = Math.round(discountReceived * 100.0) / 100.0;
+        double discountedReceived = undiscountedPrice * 0.95;
+        double discountInPercent = (undiscountedPrice - ticket.getPrice()) / undiscountedPrice;
+        double roundedDiscountInPercent = Math.round(discountInPercent * 100.0) / 100.0;
 
-        assertEquals(0.05, roundedDiscountReceived); // Recurrent user get a 5% discount
+        assertEquals(discountedReceived, ticket.getPrice());
+        assertEquals(0.05, roundedDiscountInPercent); // Recurrent user get a 5% discount
 
-        System.out.printf("\nTicket price without discount: €%.2f %nTicket price discounted: €%.2f %n", undiscountedPrice, ticket.getPrice());
-        System.out.println("Discount received: " + (roundedDiscountReceived * 100) + "%");
+        System.out.printf("\nTicket price without discount: €%.2f %nTicket price with discount: €%.2f %n", undiscountedPrice, discountedReceived);
+        System.out.println("Discount received: " + (roundedDiscountInPercent * 100) + "%");
     }
 
     @Test
@@ -177,14 +179,15 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket, true);
 
         double undiscountedPrice = calculateTicketDurationToBeCharge(ticket) * Fare.BIKE_RATE_PER_HOUR;
-        double discountReceived = (undiscountedPrice - ticket.getPrice()) / undiscountedPrice;
-        double roundedDiscountReceived = Math.round(discountReceived * 100.0) / 100.0;
+        double discountedReceived = undiscountedPrice * 0.95;
+        double discountInPercent = (undiscountedPrice - ticket.getPrice()) / undiscountedPrice;
+        double roundedDiscountInPercent = Math.round(discountInPercent * 100.0) / 100.0;
 
-//        assertEquals(ticket.getPrice(), (Fare.BIKE_RATE_PER_HOUR * 0.95)); // Recurrent user get a 5% discount
-        assertEquals(0.05, roundedDiscountReceived);
+        assertEquals(discountedReceived, ticket.getPrice());
+        assertEquals(0.05, roundedDiscountInPercent); // Recurrent user get a 5% discount
 
-        System.out.printf("\nTicket price without discount: €%.2f %nTicket price discounted: €%.2f %n", undiscountedPrice, ticket.getPrice());
-        System.out.println("Discount received: " + roundedDiscountReceived*100 + "%");
+        System.out.printf("\nTicket price without discount: €%.2f %nTicket price with discount: €%.2f %n", undiscountedPrice, discountedReceived);
+        System.out.println("Discount received: " + (roundedDiscountInPercent * 100) + "%");
     }
 
     @Test

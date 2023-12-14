@@ -138,9 +138,7 @@ public class TicketDAO {
     }
 
     public boolean isRecurrentUser(String vehicleRegNumber) {
-        Connection con = null;
-        try {
-            con = dataBaseConfig.getConnection();
+        try (Connection con = dataBaseConfig.getConnection()){
             String result = "";
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_VEHICLE_REG_NUMBER);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
@@ -155,8 +153,6 @@ public class TicketDAO {
             return Objects.equals(result, vehicleRegNumber);
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
-        }finally {
-            dataBaseConfig.closeConnection(con);
         }
         return false;
     }
