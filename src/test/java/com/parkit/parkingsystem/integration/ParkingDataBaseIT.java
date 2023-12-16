@@ -44,12 +44,12 @@ public class ParkingDataBaseIT {
     }
 
 //    @Test
-    public void clearDatabaseEntries() {
-        dataBasePrepareService.clearDataBaseEntries();
-    }
+//    public void clearDatabaseEntries() {
+//        dataBasePrepareService.clearDataBaseEntries();
+//    }
 
     @BeforeEach
-    public void setUpPerTest() throws Exception {
+    public void setUpPerTest() {
         System.out.println("##### START OF TEST #####");
 
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn(carRegistrationNumber);

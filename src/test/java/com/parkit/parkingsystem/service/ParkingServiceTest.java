@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
@@ -23,14 +22,14 @@ import static org.mockito.Mockito.*;
 public class ParkingServiceTest {
 
     @InjectMocks
-    private static ParkingService parkingService;
+    private ParkingService parkingService;
     @Mock
-    private static InputReaderUtil inputReaderUtil;
+    private InputReaderUtil inputReaderUtil;
     @Mock
-    private static ParkingSpotDAO parkingSpotDAO;
+    private ParkingSpotDAO parkingSpotDAO;
     @Mock
-    private static TicketDAO ticketDAO;
-    private Ticket ticket;
+    private TicketDAO ticketDAO;
+    private static Ticket ticket;
     private static final String carRegistrationNumber = "ABCDEF";
 
 
@@ -55,13 +54,13 @@ public class ParkingServiceTest {
 
         parkingService.processIncomingVehicle();
 
-        verify(inputReaderUtil, Mockito.times(1)).readSelection();
-        verify(parkingSpotDAO, Mockito.times(1)).getNextAvailableSlot(any(ParkingType.class));
-        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        verify(inputReaderUtil, times(1)).readSelection();
+        verify(parkingSpotDAO, times(1)).getNextAvailableSlot(any(ParkingType.class));
+        verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
     }
 
     @Test
-    public void processExitingVehicleTest() throws Exception {
+    public void processExitingVehicleTest() {
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn(carRegistrationNumber);
 
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
@@ -71,7 +70,7 @@ public class ParkingServiceTest {
 
         parkingService.processExitingVehicle();
 
-        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
     }
 
     /**
@@ -79,7 +78,7 @@ public class ParkingServiceTest {
      * lors de l’appel de processExitingVehicle()
      */
     @Test
-    public void processExitingVehicleTestUnableUpdate() throws Exception {
+    public void processExitingVehicleTestUnableUpdate() {
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn(carRegistrationNumber);
 
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
@@ -88,7 +87,7 @@ public class ParkingServiceTest {
 
         parkingService.processExitingVehicle();
 
-        verify(ticketDAO, Mockito.times(1)).getNbTicket(anyString());
+        verify(ticketDAO, times(1)).getNbTicket(anyString());
     }
 
     /**
@@ -102,8 +101,8 @@ public class ParkingServiceTest {
 
         ParkingSpot result = parkingService.getNextParkingNumberIfAvailable();
 
-        verify(inputReaderUtil, Mockito.times(1)).readSelection();
-        verify(parkingSpotDAO, Mockito.times(1)).getNextAvailableSlot(any(ParkingType.class));
+        verify(inputReaderUtil, times(1)).readSelection();
+        verify(parkingSpotDAO, times(1)).getNextAvailableSlot(any(ParkingType.class));
         Assertions.assertEquals(result, new ParkingSpot(1, ParkingType.CAR, true));
     }
 
@@ -118,8 +117,8 @@ public class ParkingServiceTest {
 
         ParkingSpot result = parkingService.getNextParkingNumberIfAvailable();
 
-        verify(inputReaderUtil, Mockito.times(1)).readSelection();
-        verify(parkingSpotDAO, Mockito.times(1)).getNextAvailableSlot(any(ParkingType.class));
+        verify(inputReaderUtil, times(1)).readSelection();
+        verify(parkingSpotDAO, times(1)).getNextAvailableSlot(any(ParkingType.class));
         Assertions.assertNull(result);
     }
 
@@ -134,7 +133,7 @@ public class ParkingServiceTest {
 
         ParkingSpot result = parkingService.getNextParkingNumberIfAvailable();
 
-        verify(inputReaderUtil, Mockito.times(1)).readSelection();
+        verify(inputReaderUtil, times(1)).readSelection();
         Assertions.assertNull(result);
     }
 
